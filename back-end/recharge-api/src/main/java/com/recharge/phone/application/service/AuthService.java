@@ -59,8 +59,8 @@ public class AuthService implements AuthUseCase {
     }
 
     private TokenResult generateTokens(User user) {
-        String acessToken = jwtService.generateAcessToken(user.getId(), user.getEmail());
+        String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail());
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());
-        return new TokenResult(acessToken, refreshToken, jwtService.getAccessTokenExpiration());
+        return new TokenResult(accessToken, refreshToken, jwtService.getAccessTokenExpiration());
     }
 }

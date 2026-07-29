@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.recharge.phone.aplication.port.out.UserRepositoryPort;
+import com.recharge.phone.application.port.out.UserRepositoryPort;
 import com.recharge.phone.domain.model.User;
 
 @Repository

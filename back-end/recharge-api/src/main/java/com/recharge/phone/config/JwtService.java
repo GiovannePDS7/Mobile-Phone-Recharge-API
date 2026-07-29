@@ -28,13 +28,13 @@ public class JwtService {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    public String generateAcessToken(String userId, String userEmail) {
-        return BuildToken(userId, userEmail, accessTokenExpiration, "access");
+    public String generateAccessToken(String userId, String userEmail) {
+        return buildToken(userId, userEmail, accessTokenExpiration, "access");
 
     }
 
     public String generateRefreshToken(String userId, String userEmail) {
-        return BuildToken(userId, userEmail, refreshTokenExpiration, "refresh");
+        return buildToken(userId, userEmail, refreshTokenExpiration, "refresh");
     }
 
     public long getAccessTokenExpiration() {
@@ -62,7 +62,7 @@ public class JwtService {
         }
     }
 
-    private String BuildToken(String userId, String userEmail, long expiration, String type) {
+    private String buildToken(String userId, String userEmail, long expiration, String type) {
         Date now = new Date(System.currentTimeMillis());
         String subject = userEmail;
 

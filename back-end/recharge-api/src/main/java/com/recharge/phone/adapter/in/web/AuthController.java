@@ -11,8 +11,8 @@ import com.recharge.phone.adapter.in.web.dto.RefreshTokenRequest;
 import com.recharge.phone.adapter.in.web.dto.RegisterRequest;
 import com.recharge.phone.adapter.in.web.dto.TokenResponse;
 import com.recharge.phone.adapter.in.web.dto.UserResponse;
-import com.recharge.phone.aplication.port.in.AuthUseCase;
-import com.recharge.phone.aplication.port.in.TokenResult;
+import com.recharge.phone.application.port.in.AuthUseCase;
+import com.recharge.phone.application.port.in.TokenResult;
 import com.recharge.phone.domain.model.User;
 
 @RestController
