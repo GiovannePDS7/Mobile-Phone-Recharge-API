@@ -1,11 +1,11 @@
-package com.recharge.phone.aplication.service;
+package com.recharge.phone.application.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.recharge.phone.aplication.port.in.AuthUseCase;
-import com.recharge.phone.aplication.port.in.TokenResult;
-import com.recharge.phone.aplication.port.out.UserRepositoryPort;
+import com.recharge.phone.application.port.in.AuthUseCase;
+import com.recharge.phone.application.port.in.TokenResult;
+import com.recharge.phone.application.port.out.UserRepositoryPort;
 import com.recharge.phone.config.JwtService;
 import com.recharge.phone.domain.model.User;
 
@@ -36,14 +36,14 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public TokenResult refreshToken(String refreshToken) {
-        if(!jwtService.isTokenValid(refreshToken)){
+        if (!jwtService.isTokenValid(refreshToken)) {
             throw new IllegalArgumentException("Invalid refresh token");
         }
 
         String email = jwtService.extractEmail(refreshToken);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        
+
         return generateTokens(user);
     }
 
@@ -63,5 +63,4 @@ public class AuthService implements AuthUseCase {
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());
         return new TokenResult(acessToken, refreshToken, jwtService.getAccessTokenExpiration());
     }
-
 }
