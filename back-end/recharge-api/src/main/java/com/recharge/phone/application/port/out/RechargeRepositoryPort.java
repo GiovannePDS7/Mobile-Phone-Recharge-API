@@ -1,16 +1,15 @@
 package com.recharge.phone.application.port.out;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import com.recharge.phone.domain.model.Recharge;
-import com.recharge.phone.application.event.CreateRechargeEvent;
+import com.recharge.phone.domain.model.recharge.Recharge;
 
 public interface RechargeRepositoryPort {
 
-  void createRecharge(CreateRechargeEvent event);
-  Optional<Recharge> findById(UUID id);
-  Optional<Recharge> findByPhoneNumber(String phoneNumber);
-  boolean existsByPhoneNumber(String phoneNumber);
+    Recharge save(Recharge recharge);
+    Optional<Recharge> findById(String id);
+    List<Recharge> findByUserId(String userId, int page, int size);
+    long countByUserId(String userId);
 
 }
