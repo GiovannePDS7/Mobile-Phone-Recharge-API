@@ -25,6 +25,11 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<User> findById(String id) {
+        return repository.findById(id).map(this::toUser);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email).map(this::toUser);
     }
@@ -32,6 +37,22 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     @Override
     public Boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        UserDocument doc = repository.findById(user.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        doc.setName(user.getName());
+        doc.setEmail(user.getEmail());
+        doc.setPasswordHash(user.getPasswordHash());
+        repository.save(doc);
+        return user;
+    }
+
+    @Override
+    public void deleteById(String id) {
+        repository.deleteById(id);
     }
 
     private User toUser(UserDocument doc) {

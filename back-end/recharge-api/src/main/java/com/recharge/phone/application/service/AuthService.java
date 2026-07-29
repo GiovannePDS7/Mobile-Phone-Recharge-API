@@ -47,17 +47,6 @@ public class AuthService implements AuthUseCase {
         return generateTokens(user);
     }
 
-    @Override
-    public User register(String name, String email, String password) {
-        if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-
-        String passwordHash = passwordEncoder.encode(password);
-        User user = new User(name, email, passwordHash);
-        return userRepository.createUser(user);
-    }
-
     private TokenResult generateTokens(User user) {
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail());
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());

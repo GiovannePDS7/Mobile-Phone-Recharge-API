@@ -54,6 +54,11 @@ public class PhoneRepositoryAdapter implements PhoneRepositoryPort {
         repository.deleteById(id);
     }
 
+    @Override
+    public void deleteAllByUserId(String userId) {
+        repository.deleteAllByUserId(userId);
+    }
+
     private Phone toDomain(PhoneDocument doc) {
         Phone phone = new Phone(doc.getUserId(), doc.getPhoneNumber(), doc.getLabel());
         phone.setId(doc.getId());

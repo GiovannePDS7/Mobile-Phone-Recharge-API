@@ -1,10 +1,6 @@
 package com.recharge.phone.application.port.in;
 
-import com.recharge.phone.domain.model.User;
-
 public interface AuthUseCase {
-
-    User register(String name, String email, String password);
 
     TokenResult login(String email, String password);
 

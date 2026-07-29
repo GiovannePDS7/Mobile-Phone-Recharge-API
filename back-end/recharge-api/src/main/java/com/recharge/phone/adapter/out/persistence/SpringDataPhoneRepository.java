@@ -9,4 +9,6 @@ public interface SpringDataPhoneRepository extends MongoRepository<PhoneDocument
     List<PhoneDocument> findByUserId(String userId);
 
     boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
+
+    void deleteAllByUserId(String userId);
 }

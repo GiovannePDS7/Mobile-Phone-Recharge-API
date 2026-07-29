@@ -8,12 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.recharge.phone.adapter.in.web.dto.LoginRequest;
 import com.recharge.phone.adapter.in.web.dto.RefreshTokenRequest;
-import com.recharge.phone.adapter.in.web.dto.RegisterRequest;
 import com.recharge.phone.adapter.in.web.dto.TokenResponse;
-import com.recharge.phone.adapter.in.web.dto.UserResponse;
 import com.recharge.phone.application.port.in.AuthUseCase;
 import com.recharge.phone.application.port.in.TokenResult;
-import com.recharge.phone.domain.model.User;
 
 @RestController
 public class AuthController implements AuthApi {
@@ -37,19 +34,27 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<UserResponse> register(RegisterRequest registerRequest) {
-        User user = authUseCase.register(
-                registerRequest.getName(),
-                registerRequest.getEmail(),
-                registerRequest.getPassword()
-        );
+    public ResponseEntity<Void> logout() {
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .maxAge(0)
+                .build();
 
-        UserResponse response = new UserResponse()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail());
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/api/auth/refresh")
+                .maxAge(0)
+                .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .build();
     }
 
     private ResponseEntity<TokenResponse> buildTokenResponse(TokenResult result, HttpStatus status) {

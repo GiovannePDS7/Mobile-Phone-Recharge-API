@@ -8,8 +8,13 @@ public interface UserRepositoryPort {
 
     User createUser(User user);
 
+    Optional<User> findById(String id);
+
     Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);
 
+    User updateUser(User user);
+
+    void deleteById(String id);
 }

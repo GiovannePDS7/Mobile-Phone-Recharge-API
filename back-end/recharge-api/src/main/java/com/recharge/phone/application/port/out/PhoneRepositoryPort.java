@@ -16,4 +16,6 @@ public interface PhoneRepositoryPort {
     boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
 
     void deleteById(String id);
+
+    void deleteAllByUserId(String userId);
 }

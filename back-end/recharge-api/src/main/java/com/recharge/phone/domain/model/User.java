@@ -45,10 +45,15 @@ public class User {
         return passwordHash;
     }
 
-    public void setPasswordHash(String passwordHash){
+    public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
 
-    public List<Phone> getPhones() { return phones; }
-    public void setPhones(List<Phone> phones) { this.phones = phones; }
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
 }
