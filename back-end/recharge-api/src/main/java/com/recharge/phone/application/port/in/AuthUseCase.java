@@ -1,4 +1,4 @@
-package com.recharge.phone.aplication.port.in;
+package com.recharge.phone.application.port.in;
 
 import com.recharge.phone.domain.model.User;
 
