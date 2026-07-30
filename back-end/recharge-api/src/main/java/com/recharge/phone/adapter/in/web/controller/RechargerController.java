@@ -1,67 +1,41 @@
 package com.recharge.phone.adapter.in.web.controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 
+import com.recharge.phone.adapter.in.web.RechargesApi;
 import com.recharge.phone.adapter.in.web.dto.CreateRechargeRequest;
 import com.recharge.phone.adapter.in.web.dto.RechargePageResponse;
 import com.recharge.phone.adapter.in.web.dto.RechargeResponse;
-import com.recharge.phone.application.dto.CreateRechargeCommand;
-import com.recharge.phone.application.dto.RechargeResultCommand;
-import com.recharge.phone.application.port.in.rechargeImp.CreateRechargeUseCase;
-import com.recharge.phone.application.port.in.rechargeImp.FindRechargeHistoryUseCase;
-import com.recharge.phone.application.port.in.rechargeImp.FindRechargeUseCase;
+import com.recharge.phone.application.service.RechargeService;
 
-@RestController
-@RequestMapping("/api/recharges")
-@RequiredArgsConstructor
-public class RechargerController {
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
-    private final CreateRechargeUseCase createRechargeUseCase;
-    private final FindRechargeUseCase findRechargeUseCase;
-    private final FindRechargeHistoryUseCase findRechargeHistoryUseCase;
+public class RechargerController implements RechargesApi{
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public RechargeResponse createRecharge(@Valid @RequestBody CreateRechargeRequest request) {
-        var result = createRechargeUseCase.createRecharge(
-            new CreateRechargeCommand(request.userId(), request.phoneNumber(), request.amount()));
-        return toResponse(result);
+    private final RechargeService rechargeService;
+
+    public RechargerController(RechargeService rechargeService) {
+        this.rechargeService = rechargeService;
     }
 
-    @GetMapping("/{id}")
-    public RechargeResponse getById(@PathVariable String id) {
-        return toResponse(findRechargeUseCase.findRechargeById(id));
+    @Override   
+    public ResponseEntity<RechargeResponse> createRecharge(@Valid CreateRechargeRequest createRechargeRequest) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    @GetMapping
-    public RechargePageResponse getHistory(
-            // userId será substituído pelo principal do JWT no Passo de Auth
-            @RequestParam String userId,
-            @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size) {
-
-        var result = findRechargeHistoryUseCase.findHistory(userId, page, size);
-
-        var content = result.content().stream().map(this::toResponse).toList();
-
-        return new RechargePageResponse(content, result.page(), result.size(),
-            result.totalElements(), result.totalPages());
+    @Override
+    public ResponseEntity<RechargeResponse> getRechargeById(String id) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    private RechargeResponse toResponse(RechargeResultCommand r) {
-        return new RechargeResponse(r.id(), r.userId(), r.phoneNumber(),
-            r.amount(), r.status(), r.createdAt(), r.updatedAt());
+    @Override
+    public ResponseEntity<RechargePageResponse> getRechargeHistory(@Min(0) @Valid Integer page,
+            @Min(1) @Max(100) @Valid Integer size) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
