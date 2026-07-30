@@ -24,12 +24,14 @@ public class RechargerController implements RechargesApi{
     @Override   
     public ResponseEntity<RechargeResponse> createRecharge(@Valid CreateRechargeRequest createRechargeRequest) {
         // TODO Auto-generated method stub
-        return null;
+        RechargeResponse rechargeResponse = rechargeUseCase.createRecharge(createRechargeRequest);
+        return ResponseEntity.accepted().body(rechargeResponse);
     }
 
     @Override
     public ResponseEntity<RechargeResponse> getRechargeById(String id) {
         // TODO Auto-generated method stub
+        
         return null;
     }
 
