@@ -1,27 +1,5 @@
 services:
 
-  # ── API ────────────────────────────────────────────
-  app:
-    build:
-      context: .
-      dockerfile: DockerFile
-    container_name: recharge-api
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/recharge
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      JWT_SECRET: change-me-in-production
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          memory: 512m
-
   # ── MongoDB ────────────────────────────────────────
   mongodb:
     image: mongo:7
