@@ -1,10 +1,14 @@
 package com.recharge.phone.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     private String id;
     private String name;
     private String email;
     private String passwordHash;
+    private List<Phone> phones = new ArrayList<>();
 
     public User(String name, String email, String passwordHash) {
         this.id = null;
@@ -41,7 +45,15 @@ public class User {
         return passwordHash;
     }
 
-    public void setPasswordHash(String passwordHash){
+    public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 }

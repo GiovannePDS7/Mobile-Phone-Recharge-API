@@ -9,18 +9,22 @@ servers:
     description: Local
 
 tags:
+  - name: Users
+    description: Registro e gerenciamento de conta do usuário
   - name: Auth
-    description: Autenticação e registro de usuários
+    description: Autenticação (login, refresh, logout)
+  - name: Phones
+    description: Gerenciamento de telefones do usuário
   - name: Recharges
     description: Operações de recarga de celular
 
 paths:
-  /api/auth/register:
+  /api/users:
     post:
       tags:
-        - Auth
-      summary: Registrar usuário
-      operationId: register
+        - Users
+      summary: Registrar novo usuário
+      operationId: registerUser
       requestBody:
         required: true
         content:
@@ -47,6 +51,69 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/users/me:
+    get:
+      tags:
+        - Users
+      summary: Dados do usuário logado com telefones vinculados
+      operationId: getCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dados do usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          description: Não autenticado
+    put:
+      tags:
+        - Users
+      summary: Atualizar dados do usuário
+      operationId: updateCurrentUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Usuário atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autenticado
+        '409':
+          description: E-mail já em uso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Users
+      summary: Excluir conta do usuário
+      operationId: deleteCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Conta excluída com sucesso
+        '401':
+          description: Não autenticado
   /api/auth/login:
     post:
       tags:
@@ -96,6 +163,100 @@ paths:
                 $ref: '#/components/schemas/TokenResponse'
         '401':
           description: Token inválido ou expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout — limpa cookies JWT
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout bem-sucedido
+        '401':
+          description: Não autenticado
+
+  /api/phones:
+    post:
+      tags:
+        - Phones
+      summary: Registrar um novo telefone
+      operationId: registerPhone
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterPhoneRequest'
+      responses:
+        '201':
+          description: Telefone registrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneResponse'
+        '400':
+          description: Dados inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Não autenticado
+        '409':
+          description: Telefone já cadastrado para este usuário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - Phones
+      summary: Listar telefones do usuário
+      operationId: listPhones
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de telefones do usuário
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PhoneResponse'
+        '401':
+          description: Não autenticado
+
+  /api/phones/{id}:
+    delete:
+      tags:
+        - Phones
+      summary: Remover um telefone
+      operationId: deletePhone
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Telefone removido com sucesso
+        '401':
+          description: Não autenticado
+        '404':
+          description: Telefone não encontrado
           content:
             application/json:
               schema:
@@ -257,8 +418,42 @@ components:
         email:
           type: string
 
+    UserProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneResponse'
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          maxLength: 100
+          format: password
+
     TokenResponse:
       type: object
+      required:
+        - accessToken
+        - refreshToken
+        - expiresIn
       properties:
         accessToken:
           type: string
@@ -338,5 +533,34 @@ components:
         message:
           type: string
         timestamp:
+          type: string
+          format: date-time
+
+    RegisterPhoneRequest:
+      type: object
+      required:
+        - phoneNumber
+        - label
+      properties:
+        phoneNumber:
+          type: string
+          pattern: '^\+?[1-9]\d{10,14}$'
+          example: "+5511999999999"
+        label:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: "Pessoal"
+
+    PhoneResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        phoneNumber:
+          type: string
+        label:
+          type: string
+        createdAt:
           type: string
           format: date-time
