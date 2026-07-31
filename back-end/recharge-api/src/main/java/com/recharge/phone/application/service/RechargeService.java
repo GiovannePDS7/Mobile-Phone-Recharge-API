@@ -1,13 +1,11 @@
 package com.recharge.phone.application.service;
 
 import com.recharge.phone.application.event.CreateRechargeEvent;
-import com.recharge.phone.adapter.in.web.UserController;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static java.time.ZoneOffset.UTC;
 
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
