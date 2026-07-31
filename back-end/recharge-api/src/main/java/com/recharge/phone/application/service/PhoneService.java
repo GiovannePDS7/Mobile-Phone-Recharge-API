@@ -22,9 +22,13 @@ public class PhoneService implements PhoneUseCase {
     @Override
     public Phone registerPhone(String phoneNumber, String label) {
 
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            throw new SecurityException("Usuário não autenticado");
+        }
+        String userId = auth.getName();
 
-        if (phoneRepository.existsByPhoneNumber(phoneNumber)) {
+        if (phoneRepository.existsByUserIdAndPhoneNumber(userId, phoneNumber)) {
             throw new IllegalArgumentException("Phone number already registered");
         }
 
@@ -35,6 +39,12 @@ public class PhoneService implements PhoneUseCase {
     @Override
     public List<Phone> listPhones(String userId) {
         return phoneRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Phone getPhoneByUserIdAndPhoneNumber(String userId, String phoneNumber) {
+        return phoneRepository.findByUserIdAndPhoneNumber(userId, phoneNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Phone not found"));
     }
 
     @Override

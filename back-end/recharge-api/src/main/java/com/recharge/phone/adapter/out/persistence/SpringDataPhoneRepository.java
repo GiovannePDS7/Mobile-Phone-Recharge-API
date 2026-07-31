@@ -1,6 +1,7 @@
 package com.recharge.phone.adapter.out.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -13,4 +14,6 @@ public interface SpringDataPhoneRepository extends MongoRepository<PhoneDocument
     void deleteAllByUserId(String userId);
 
     boolean existsByPhoneNumber(String phoneNumber);
+
+    Optional<PhoneDocument> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
 }

@@ -11,7 +11,9 @@ import com.recharge.phone.application.port.in.RechargeUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class RechargerController implements RechargesApi{
 
     private final RechargeUseCase rechargeUseCase;
@@ -22,20 +24,19 @@ public class RechargerController implements RechargesApi{
 
     @Override   
     public ResponseEntity<RechargeResponse> createRecharge(@Valid CreateRechargeRequest createRechargeRequest) {
-        // TODO Auto-generated method stub
-        return null;
+        RechargeResponse rechargeResponse = rechargeUseCase.createRecharge(createRechargeRequest);
+        return ResponseEntity.accepted().body(rechargeResponse);
     }
 
     @Override
     public ResponseEntity<RechargeResponse> getRechargeById(String id) {
-        // TODO Auto-generated method stub
-        return null;
+        return ResponseEntity.ok(rechargeUseCase.getRechargeById(id));
     }
 
     @Override
     public ResponseEntity<RechargePageResponse> getRechargeHistory(@Min(0) @Valid Integer page,
             @Min(1) @Max(100) @Valid Integer size) {
-        // TODO Auto-generated method stub
-        return null;
+        ResponseEntity<RechargePageResponse> rechargePageResponse = ResponseEntity.ok(rechargeUseCase.getRechargeHistory(page, size));
+        return rechargePageResponse;
     }
 }

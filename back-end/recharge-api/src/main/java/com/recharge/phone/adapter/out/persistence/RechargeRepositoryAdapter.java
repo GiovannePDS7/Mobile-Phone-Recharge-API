@@ -42,13 +42,27 @@ public class RechargeRepositoryAdapter implements RechargeRepositoryPort {
         return mongoRepository.countByUserId(userId);
     }
 
+    @Override
+    public void updateRechargeStatus(String rechargeId, RechargeStatus status) {
+        Optional<RechargeDocument> optionalRecharge = mongoRepository.findById(rechargeId);
+        
+        if (optionalRecharge.isPresent()) {
+            RechargeDocument rechargeDocument = optionalRecharge.get();
+            rechargeDocument.setStatus(status);
+            mongoRepository.save(rechargeDocument);
+        } else {
+            throw new IllegalArgumentException("Recharge not found with id: " + rechargeId);
+        }
+    }
+    
+
     private RechargeDocument toDocument(Recharge r) {
         return new RechargeDocument(
             r.getId(),
             r.getUserId(),
             r.getPhoneNumber(),
             r.getAmount(),
-            r.getStatus().name(),
+            r.getStatus(),
             r.getCreatedAt(),
             r.getUpdatedAt());
     }
@@ -59,7 +73,7 @@ public class RechargeRepositoryAdapter implements RechargeRepositoryPort {
             doc.getUserId(),
             doc.getPhoneNumber(),
             doc.getAmount(),
-            RechargeStatus.valueOf(doc.getStatus()),
+            doc.getStatus(),
             doc.getCreatedAt(),
             doc.getUpdatedAt());
     }

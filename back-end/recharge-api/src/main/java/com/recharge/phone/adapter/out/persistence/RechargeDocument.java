@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.recharge.phone.domain.model.recharge.RechargeStatus;
+
 @Document(collection = "recharges")
 public class RechargeDocument {
 
@@ -13,14 +15,14 @@ public class RechargeDocument {
     private String userId;
     private String phoneNumber;
     private double amount;
-    private String status;
+    private RechargeStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public RechargeDocument() {}
 
     public RechargeDocument(String id, String userId, String phoneNumber,
-            double amount, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+            double amount, RechargeStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userId = userId;
         this.phoneNumber = phoneNumber;
@@ -42,9 +44,13 @@ public class RechargeDocument {
     public double getAmount() {
       return amount;
     }
-    public String getStatus() {
+    public RechargeStatus getStatus() {
       return status;
     }
+    public void setStatus(RechargeStatus status) {
+      this.status = status;
+    }
+
     public LocalDateTime getCreatedAt() {
       return createdAt;
     }

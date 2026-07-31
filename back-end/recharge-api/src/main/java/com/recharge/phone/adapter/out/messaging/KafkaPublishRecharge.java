@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class KafkaPublishRecharge implements KafkaRechargeEventPort {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, CreateRechargeEvent> kafkaTemplate;
 
     private static final String TOPIC = "recharge-topic";
 

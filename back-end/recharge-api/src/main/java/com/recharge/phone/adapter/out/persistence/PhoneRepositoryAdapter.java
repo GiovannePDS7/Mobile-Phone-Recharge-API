@@ -26,6 +26,7 @@ public class PhoneRepositoryAdapter implements PhoneRepositoryPort {
                 phone.getAmount(),
                 phone.getCreatedAt()
         );
+        doc.setId(phone.getId());
         PhoneDocument saved = repository.save(doc);
         phone.setId(saved.getId());
         return phone;
@@ -34,15 +35,21 @@ public class PhoneRepositoryAdapter implements PhoneRepositoryPort {
     @Override
     public List<Phone> findByUserId(String userId) {
         return repository.findByUserId(userId).stream()
-                .map(this::toDomain)
+                .map(doc -> toDomain(doc))
                 .toList();
+    }
+
+    @Override
+    public Optional<Phone> findByUserIdAndPhoneNumber(String userId, String phoneNumber) {
+        return repository.findByUserIdAndPhoneNumber(userId, phoneNumber)
+                .map(doc -> toDomain(doc));
     }
 
     @Override
     public Optional<Phone> findByIdAndUserId(String id, String userId) {
         return repository.findById(id)
                 .filter(doc -> doc.getUserId().equals(userId))
-                .map(this::toDomain);
+                .map(doc -> toDomain(doc));
     }
 
     @Override
