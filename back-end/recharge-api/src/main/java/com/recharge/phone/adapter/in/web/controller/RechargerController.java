@@ -38,6 +38,7 @@ public class RechargerController implements RechargesApi{
     public ResponseEntity<RechargePageResponse> getRechargeHistory(@Min(0) @Valid Integer page,
             @Min(1) @Max(100) @Valid Integer size) {
         // TODO Auto-generated method stub
-        return null;
+        ResponseEntity<RechargePageResponse> rechargePageResponse = ResponseEntity.ok(rechargeUseCase.getRechargeHistory(page, size));
+        return rechargePageResponse;
     }
 }

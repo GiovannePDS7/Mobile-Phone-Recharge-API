@@ -11,11 +11,13 @@ public interface PhoneRepositoryPort {
 
     List<Phone> findByUserId(String userId);
 
-    Optional<Phone> findByIdAndUserId(String id, String userId);
+    boolean existsByPhoneNumber(String phoneNumber);
 
     boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
 
     void deleteById(String id);
+
+    Optional<Phone> findByIdAndUserId(String id, String userId);
 
     void deleteAllByUserId(String userId);
 }

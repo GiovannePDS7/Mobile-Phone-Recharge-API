@@ -3,6 +3,7 @@ package com.recharge.phone.application.service;
 import com.recharge.phone.adapter.in.messaging.KafkaPublishRecharge;
 import com.recharge.phone.application.event.CreateRechargeEvent;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static java.time.ZoneOffset.UTC;
@@ -46,8 +47,15 @@ public class RechargeService implements RechargeUseCase {
 
     @Override
     public RechargePageResponse getRechargeHistory(Integer page, Integer size) {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO Auto-geSnerated method stub
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        List<RechargeResponse> rechargeResponses = rechargeRepositoryPort.findByUserId(userId, page, size)
+                .stream()
+                .map(this::returnDto)
+                .toList();
+        long total = rechargeRepositoryPort.countByUserId(userId);
+        return new RechargePageResponse().content(rechargeResponses).page(page).size(size).totalElements(total).totalPages((int) Math.ceil((double) total / size));
     }
 
     public Recharge returnDomain(CreateRechargeRequest createRechargeRequest) {

@@ -1,7 +1,9 @@
 package com.recharge.phone.application.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.recharge.phone.application.port.in.PhoneUseCase;
@@ -18,12 +20,15 @@ public class PhoneService implements PhoneUseCase {
     }
 
     @Override
-    public Phone registerPhone(String userId, String phoneNumber, String label) {
-        if (phoneRepository.existsByUserIdAndPhoneNumber(userId, phoneNumber)) {
+    public Phone registerPhone(String phoneNumber, String label) {
+
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (phoneRepository.existsByPhoneNumber(phoneNumber)) {
             throw new IllegalArgumentException("Phone number already registered");
         }
 
-        Phone phone = new Phone(userId, phoneNumber, label);
+        Phone phone = new Phone(userId, phoneNumber, label, BigDecimal.ZERO);
         return phoneRepository.save(phone);
     }
 
@@ -34,8 +39,7 @@ public class PhoneService implements PhoneUseCase {
 
     @Override
     public void deletePhone(String userId, String phoneId) {
-        phoneRepository.findByIdAndUserId(phoneId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("Phone not found"));
+        phoneRepository.findByIdAndUserId(phoneId, userId).orElseThrow(() -> new IllegalArgumentException("Phone not found"));
 
         phoneRepository.deleteById(phoneId);
     }

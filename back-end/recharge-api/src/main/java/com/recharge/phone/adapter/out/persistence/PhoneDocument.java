@@ -1,5 +1,6 @@
 package com.recharge.phone.adapter.out.persistence;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 import org.springframework.data.annotation.Id;
@@ -15,14 +16,16 @@ public class PhoneDocument {
     private String userId;
     private String phoneNumber;
     private String label;
+    private BigDecimal amount;
     private Instant createdAt;
 
     public PhoneDocument() {}
 
-    public PhoneDocument(String userId, String phoneNumber, String label, Instant createdAt) {
+    public PhoneDocument(String userId, String phoneNumber, String label, BigDecimal amount, Instant createdAt) {
         this.userId = userId;
         this.phoneNumber = phoneNumber;
         this.label = label;
+        this.amount = amount;
         this.createdAt = createdAt;
     }
 
@@ -34,6 +37,8 @@ public class PhoneDocument {
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
     public String getLabel() { return label; }
     public void setLabel(String label) { this.label = label; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 }

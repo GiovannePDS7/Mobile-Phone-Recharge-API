@@ -11,4 +11,6 @@ public interface SpringDataPhoneRepository extends MongoRepository<PhoneDocument
     boolean existsByUserIdAndPhoneNumber(String userId, String phoneNumber);
 
     void deleteAllByUserId(String userId);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }

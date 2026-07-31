@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RechargeRepositoryAdapter implements RechargeRepositoryPort {
 
-    private final RechargeMongoRepository mongoRepository;
+    private final SpringDataRechargeRepository mongoRepository;
 
     @Override
     public Recharge save(Recharge recharge) {

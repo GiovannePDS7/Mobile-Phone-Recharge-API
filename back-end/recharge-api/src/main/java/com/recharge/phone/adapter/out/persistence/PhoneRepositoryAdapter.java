@@ -23,6 +23,7 @@ public class PhoneRepositoryAdapter implements PhoneRepositoryPort {
                 phone.getUserId(),
                 phone.getPhoneNumber(),
                 phone.getLabel(),
+                phone.getAmount(),
                 phone.getCreatedAt()
         );
         PhoneDocument saved = repository.save(doc);
@@ -59,8 +60,13 @@ public class PhoneRepositoryAdapter implements PhoneRepositoryPort {
         repository.deleteAllByUserId(userId);
     }
 
+    @Override
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        return repository.existsByPhoneNumber(phoneNumber);
+    }
+
     private Phone toDomain(PhoneDocument doc) {
-        Phone phone = new Phone(doc.getUserId(), doc.getPhoneNumber(), doc.getLabel());
+        Phone phone = new Phone(doc.getUserId(), doc.getPhoneNumber(), doc.getLabel(), doc.getAmount());
         phone.setId(doc.getId());
         phone.setCreatedAt(doc.getCreatedAt());
         return phone;
