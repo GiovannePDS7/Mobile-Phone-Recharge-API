@@ -1,12 +1,14 @@
-package com.recharge.phone.adapter.in.messaging;
+package com.recharge.phone.adapter.out.messaging;
 
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 
 import com.recharge.phone.application.event.CreateRechargeEvent;
 import com.recharge.phone.application.port.out.KafkaRechargeEventPort;
 
 import lombok.AllArgsConstructor;
 
+@Component
 @AllArgsConstructor
 public class KafkaPublishRecharge implements KafkaRechargeEventPort {
 
