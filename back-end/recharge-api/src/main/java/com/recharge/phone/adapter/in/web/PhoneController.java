@@ -25,8 +25,7 @@ public class PhoneController implements PhonesApi {
 
     @Override
     public ResponseEntity<PhoneResponse> registerPhone(RegisterPhoneRequest request) {
-        String userId = getCurrentUserId();
-        Phone phone = phoneUseCase.registerPhone(userId, request.getPhoneNumber(), request.getLabel());
+        Phone phone = phoneUseCase.registerPhone(request.getPhoneNumber(), request.getLabel());
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(phone));
     }
 
@@ -55,6 +54,7 @@ public class PhoneController implements PhonesApi {
                 .id(phone.getId())
                 .phoneNumber(phone.getPhoneNumber())
                 .label(phone.getLabel())
+                .amount(phone.getAmount() != null ? phone.getAmount().doubleValue() : null)
                 .createdAt(OffsetDateTime.ofInstant(phone.getCreatedAt(), ZoneOffset.UTC));
     }
 }

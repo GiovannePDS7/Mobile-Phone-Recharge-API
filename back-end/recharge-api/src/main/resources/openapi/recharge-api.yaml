@@ -561,6 +561,10 @@ components:
           type: string
         label:
           type: string
+        amount:
+          type: number
+          format: double
+          example: 20.00
         createdAt:
           type: string
           format: date-time

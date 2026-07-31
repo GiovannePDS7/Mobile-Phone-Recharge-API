@@ -6,7 +6,7 @@ import com.recharge.phone.domain.model.Phone;
 
 public interface PhoneUseCase {
 
-    Phone registerPhone(String userId, String phoneNumber, String label);
+    Phone registerPhone(String phoneNumber, String label);
 
     List<Phone> listPhones(String userId);
 

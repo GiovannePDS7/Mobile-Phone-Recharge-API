@@ -52,6 +52,7 @@ public class UserController implements UsersApi {
                         .id(p.getId())
                         .phoneNumber(p.getPhoneNumber())
                         .label(p.getLabel())
+                        .amount(p.getAmount() != null ? p.getAmount().doubleValue() : null)
                         .createdAt(OffsetDateTime.ofInstant(p.getCreatedAt(), ZoneOffset.UTC)))
                 .toList();
 
