@@ -182,6 +182,16 @@ paths:
         '401':
           description: Não autenticado
 
+  /api/auth/csrf:
+    get:
+      tags:
+        - Auth
+      summary: Gerar token CSRF
+      operationId: csrf
+      responses:
+        '204':
+          description: Token CSRF gerado com sucesso
+
   /api/phones:
     post:
       tags:
