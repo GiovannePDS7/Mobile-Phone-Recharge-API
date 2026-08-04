@@ -13,6 +13,7 @@ import com.recharge.phone.adapter.in.web.PhonesApi;
 import com.recharge.phone.adapter.in.web.dto.PhoneResponse;
 import com.recharge.phone.adapter.in.web.dto.RegisterPhoneRequest;
 import com.recharge.phone.application.port.in.PhoneUseCase;
+import com.recharge.phone.domain.exception.UnauthorizedException;
 import com.recharge.phone.domain.model.Phone;
 
 @RestController
@@ -48,8 +49,8 @@ public class PhoneController implements PhonesApi {
 
     private String getCurrentUserId() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            throw new SecurityException("Usuário não autenticado");
+        if (auth == null || auth.getPrincipal() == null) {
+            throw new UnauthorizedException("Usuário não autenticado");
         }
         return (String) auth.getPrincipal();
     }

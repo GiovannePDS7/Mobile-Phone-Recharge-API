@@ -16,6 +16,7 @@ import com.recharge.phone.adapter.in.web.dto.UpdateUserRequest;
 import com.recharge.phone.adapter.in.web.dto.UserProfileResponse;
 import com.recharge.phone.adapter.in.web.dto.UserResponse;
 import com.recharge.phone.application.port.in.UserUseCase;
+import com.recharge.phone.domain.exception.UnauthorizedException;
 import com.recharge.phone.domain.model.User;
 
 @RestController
@@ -88,8 +89,8 @@ public class UserController implements UsersApi {
 
     private String getCurrentUserId() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            throw new SecurityException("Usuário não autenticado");
+        if (auth == null || auth.getPrincipal() == null) {
+            throw new UnauthorizedException("Usuário não autenticado");
         }
         return (String) auth.getPrincipal();
     }

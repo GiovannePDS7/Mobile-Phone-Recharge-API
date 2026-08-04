@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.recharge.phone.application.port.in.PhoneUseCase;
 import com.recharge.phone.application.port.out.PhoneRepositoryPort;
+import com.recharge.phone.domain.exception.PhoneAlreadyRegisteredException;
+import com.recharge.phone.domain.exception.PhoneNotFoundException;
+import com.recharge.phone.domain.exception.UnauthorizedException;
 import com.recharge.phone.domain.model.Phone;
 
 @Service
@@ -24,12 +27,12 @@ public class PhoneService implements PhoneUseCase {
 
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
-            throw new SecurityException("Usuário não autenticado");
+            throw new UnauthorizedException("Usuário não autenticado");
         }
         String userId = auth.getName();
 
         if (phoneRepository.existsByUserIdAndPhoneNumber(userId, phoneNumber)) {
-            throw new IllegalArgumentException("Phone number already registered");
+            throw new PhoneAlreadyRegisteredException();
         }
 
         Phone phone = new Phone(userId, phoneNumber, label, BigDecimal.ZERO);
@@ -44,12 +47,12 @@ public class PhoneService implements PhoneUseCase {
     @Override
     public Phone getPhoneByUserIdAndPhoneNumber(String userId, String phoneNumber) {
         return phoneRepository.findByUserIdAndPhoneNumber(userId, phoneNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Phone not found"));
+                .orElseThrow(PhoneNotFoundException::new);
     }
 
     @Override
     public void deletePhone(String userId, String phoneId) {
-        phoneRepository.findByIdAndUserId(phoneId, userId).orElseThrow(() -> new IllegalArgumentException("Phone not found"));
+        phoneRepository.findByIdAndUserId(phoneId, userId).orElseThrow(PhoneNotFoundException::new);
 
         phoneRepository.deleteById(phoneId);
     }
