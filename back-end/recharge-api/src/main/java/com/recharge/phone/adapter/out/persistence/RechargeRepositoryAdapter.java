@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import com.recharge.phone.application.port.out.RechargeRepositoryPort;
+import com.recharge.phone.domain.exception.RechargeNotFoundException;
 import com.recharge.phone.domain.model.recharge.Recharge;
 import com.recharge.phone.domain.model.recharge.RechargeStatus;
 
@@ -51,7 +52,7 @@ public class RechargeRepositoryAdapter implements RechargeRepositoryPort {
             rechargeDocument.setStatus(status);
             mongoRepository.save(rechargeDocument);
         } else {
-            throw new IllegalArgumentException("Recharge not found with id: " + rechargeId);
+            throw new RechargeNotFoundException(rechargeId);
         }
     }
     

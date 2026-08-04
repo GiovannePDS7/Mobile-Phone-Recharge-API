@@ -15,6 +15,7 @@ import com.recharge.phone.adapter.in.web.dto.RechargeResponse;
 import com.recharge.phone.adapter.in.web.dto.RechargeStatus;
 import com.recharge.phone.domain.exception.AmountIsToLowException;
 import com.recharge.phone.domain.exception.RechargeNotFoundException;
+import com.recharge.phone.domain.exception.UnauthorizedException;
 import com.recharge.phone.adapter.out.messaging.KafkaPublishRecharge;
 import com.recharge.phone.application.port.in.RechargeUseCase;
 import com.recharge.phone.application.port.out.RechargeRepositoryPort;
@@ -50,7 +51,11 @@ public class RechargeService implements RechargeUseCase{
 
     @Override
     public RechargePageResponse getRechargeHistory(Integer page, Integer size) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            throw new UnauthorizedException("Usuário não autenticado");
+        }
+        String userId = auth.getName();
 
         List<RechargeResponse> rechargeResponses = rechargeRepositoryPort.findByUserId(userId, page, size)
                 .stream()
@@ -63,7 +68,7 @@ public class RechargeService implements RechargeUseCase{
     public Recharge returnDomain(CreateRechargeRequest createRechargeRequest) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || auth.getPrincipal() == null) {
-            throw new SecurityException("Usuário não autenticado");
+            throw new UnauthorizedException("Usuário não autenticado");
         }
         String userId = (String) auth.getPrincipal();
 

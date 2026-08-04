@@ -7,6 +7,8 @@ import com.recharge.phone.application.port.in.AuthUseCase;
 import com.recharge.phone.application.port.in.TokenResult;
 import com.recharge.phone.application.port.out.UserRepositoryPort;
 import com.recharge.phone.config.JwtService;
+import com.recharge.phone.domain.exception.InvalidCredentialsException;
+import com.recharge.phone.domain.exception.InvalidTokenException;
 import com.recharge.phone.domain.model.User;
 
 @Service
@@ -25,10 +27,10 @@ public class AuthService implements AuthUseCase {
     @Override
     public TokenResult login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            throw new IllegalArgumentException("Invalid password");
+            throw new InvalidCredentialsException();
         }
 
         return generateTokens(user);
@@ -37,12 +39,12 @@ public class AuthService implements AuthUseCase {
     @Override
     public TokenResult refreshToken(String refreshToken) {
         if (!jwtService.isTokenValid(refreshToken)) {
-            throw new IllegalArgumentException("Invalid refresh token");
+            throw new InvalidTokenException();
         }
 
         String email = jwtService.extractEmail(refreshToken);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(InvalidTokenException::new);
 
         return generateTokens(user);
     }

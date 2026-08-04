@@ -1,6 +1,7 @@
 package com.recharge.phone.adapter.in.web.controller;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -10,8 +11,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.recharge.phone.domain.exception.AmountIsToLowException;
+import com.recharge.phone.domain.exception.EmailAlreadyExistsException;
+import com.recharge.phone.domain.exception.EmailAlreadyInUseException;
+import com.recharge.phone.domain.exception.InvalidCredentialsException;
+import com.recharge.phone.domain.exception.InvalidTokenException;
+import com.recharge.phone.domain.exception.PhoneAlreadyRegisteredException;
+import com.recharge.phone.domain.exception.PhoneNotFoundException;
 import com.recharge.phone.domain.exception.PhoneNumberNotExistsException;
 import com.recharge.phone.domain.exception.RechargeNotFoundException;
+import com.recharge.phone.domain.exception.UnauthorizedException;
+import com.recharge.phone.domain.exception.UserNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -36,6 +45,30 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUserNotFound(UserNotFoundException ex) {
+        return error(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(PhoneNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlePhoneNotFound(PhoneNotFoundException ex) {
+        return error(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler({ EmailAlreadyExistsException.class, EmailAlreadyInUseException.class, PhoneAlreadyRegisteredException.class })
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleConflict(RuntimeException ex) {
+        return error(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler({ InvalidCredentialsException.class, InvalidTokenException.class, UnauthorizedException.class, SecurityException.class })
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleUnauthorized(RuntimeException ex) {
+        return error(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidation(MethodArgumentNotValidException ex) {
@@ -45,6 +78,12 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, message);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequest(IllegalArgumentException ex) {
+        return error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleUnexpected(Exception ex) {
@@ -52,6 +91,6 @@ public class GlobalExceptionHandler {
     }
 
     private ErrorResponse error(HttpStatus status, String message) {
-        return new ErrorResponse(status.value(), message, LocalDateTime.now());
+        return new ErrorResponse(status.value(), message, LocalDateTime.now(ZoneOffset.UTC));
     }
 }
