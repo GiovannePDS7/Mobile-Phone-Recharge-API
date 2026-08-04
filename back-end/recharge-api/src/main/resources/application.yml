@@ -1,0 +1,28 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/recharge-db}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.recharge.phone.application.event
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:3600000}
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:86400000}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    url: /openapi/recharge-api.yaml

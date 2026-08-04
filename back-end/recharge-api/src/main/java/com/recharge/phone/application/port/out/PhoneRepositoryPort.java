@@ -20,4 +20,6 @@ public interface PhoneRepositoryPort {
     Optional<Phone> findByIdAndUserId(String id, String userId);
 
     void deleteAllByUserId(String userId);
+
+    Optional<Phone> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
 }
