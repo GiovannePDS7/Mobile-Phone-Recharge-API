@@ -1,4 +1,4 @@
-package com.recharge.phone.adapter.in.web;
+package com.recharge.phone.adapter.in.web.controller;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -6,6 +6,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.recharge.phone.adapter.in.web.AuthApi;
 import com.recharge.phone.adapter.in.web.dto.LoginRequest;
 import com.recharge.phone.adapter.in.web.dto.RefreshTokenRequest;
 import com.recharge.phone.adapter.in.web.dto.TokenResponse;
@@ -15,6 +16,7 @@ import com.recharge.phone.application.port.in.TokenResult;
 @RestController
 public class AuthController implements AuthApi {
 
+    private static final String SAME_SITE_STRICT = "Strict";
     private final AuthUseCase authUseCase;
 
     public AuthController(AuthUseCase authUseCase) {
@@ -38,7 +40,7 @@ public class AuthController implements AuthApi {
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", "")
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite(SAME_SITE_STRICT)
                 .path("/")
                 .maxAge(0)
                 .build();
@@ -46,7 +48,7 @@ public class AuthController implements AuthApi {
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite(SAME_SITE_STRICT)
                 .path("/api/auth/refresh")
                 .maxAge(0)
                 .build();
@@ -61,7 +63,7 @@ public class AuthController implements AuthApi {
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", result.accessToken())
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite(SAME_SITE_STRICT)
                 .path("/")
                 .maxAge(result.expiresIn() / 1000)
                 .build();
@@ -69,7 +71,7 @@ public class AuthController implements AuthApi {
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", result.refreshToken())
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite(SAME_SITE_STRICT)
                 .path("/api/auth/refresh")
                 .maxAge(604800)
                 .build();

@@ -1,4 +1,4 @@
-package com.recharge.phone.adapter.in.web;
+package com.recharge.phone.adapter.in.web.controller;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.recharge.phone.adapter.in.web.UsersApi;
 import com.recharge.phone.adapter.in.web.dto.PhoneResponse;
 import com.recharge.phone.adapter.in.web.dto.RegisterRequest;
 import com.recharge.phone.adapter.in.web.dto.UpdateUserRequest;
@@ -86,6 +87,10 @@ public class UserController implements UsersApi {
     }
 
     private String getCurrentUserId() {
-        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            throw new SecurityException("Usuário não autenticado");
+        }
+        return (String) auth.getPrincipal();
     }
 }

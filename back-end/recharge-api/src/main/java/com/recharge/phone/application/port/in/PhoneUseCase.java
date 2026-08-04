@@ -11,4 +11,6 @@ public interface PhoneUseCase {
     List<Phone> listPhones(String userId);
 
     void deletePhone(String userId, String phoneId);
+
+    Phone getPhoneByUserIdAndPhoneNumber(String userId, String phoneNumber);
 }
